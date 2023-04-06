@@ -7,25 +7,21 @@ msg_list=message.split(" ")
 #print(msg_list)
 
 new_list=[]
-for word in msg_list:
-  first_letter=word[0]
-  #separate non letters at the beginnig of word
+def separate_nonletters(word):
   prefix_non_letters=""
-  while len(word)>0 and not word[0].isalpha():
+  suffix_non_letters=""
+  while len(word)>0 and not word[0].isalpha():#separate non letters at the beginnig of word
     prefix_non_letters+=word[0]
     word=word[1:]
   if len(word)==0:
-    new_list.append(prefix_non_letters)
-    continue
-  #separate non letters at the end of the word
-  suffix_non_letters=""
-  while not word[-1].isalpha():
+    return (prefix_non_letters,suffix_non_letters,word)
+  while not word[-1].isalpha():#separate non letters at the end of the word
     suffix_non_letters+=word[-1]
     word=word[:-1]
-  #create two variables to check if upper or title cases
-  was_upper=word.isupper()
-  was_title=word.istitle()
-  word=word.lower()
+  suffix_non_letters=suffix_non_letters[::-1]#reverse the order of the string
+  return (prefix_non_letters,suffix_non_letters,word)#returning a tuple
+#translate pig latin
+def pig_latin(word):
   #words that starts with consonants
   prefix_consonant=""
   if not word[0] in vowels:
@@ -35,6 +31,23 @@ for word in msg_list:
     word+=prefix_consonant+"ay"
   else:
     word+="yay"
+  return word
+    
+for word in msg_list:
+  first_letter=word[0]
+
+  prefix_non_letters,suffix_non_letters,word=separate_nonletters(word)
+  if word=="":
+    new_list.append(prefix_non_letters)
+    continue
+  #create two variables to check if upper or title cases
+  was_upper=word.isupper()
+  was_title=word.istitle()
+  word=word.lower()
+  
+  word=pig_latin(word)#using the function to translate
+  
+ 
   if was_upper:
     word=word.upper()
   if was_title:
